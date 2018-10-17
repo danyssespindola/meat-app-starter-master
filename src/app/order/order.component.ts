@@ -6,6 +6,7 @@ import { Order, OrderItem } from './order.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { LoginService } from '../security/login/login.service';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'mt-order',
@@ -14,6 +15,7 @@ import { LoginService } from '../security/login/login.service';
 export class OrderComponent implements OnInit {
 
   orderForm: FormGroup;
+  orderId: string;
 
   emailPattern = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   numberPattern = /^[0-9]*$/;
@@ -56,7 +58,7 @@ export class OrderComponent implements OnInit {
       paymentOption: this.formBuilder.control('', [Validators.required])
     }, {validator: OrderComponent.equalsTo});
 
-    if(this.loginService.isLoogedIn) {
+    if (this.loginService.isLoogedIn) {
       this.orderForm.controls['name'].setValue(this.loginService.user.name);
       this.orderForm.controls['email'].setValue(this.loginService.user.email);
       this.orderForm.controls['emailConfirmation'].setValue(this.loginService.user.email);
@@ -85,11 +87,19 @@ export class OrderComponent implements OnInit {
 
   checkOrder(order: Order) {
     order.orderItems = this.cartItems().map((item: CartItem) => new OrderItem(item.quantity, item.menuItem.id));
-    this.orderService.checkOrder(order).subscribe( (orderId: string) => {
+    this.orderService.checkOrder(order)
+                     .do((orderId: string) => {
+                       this.orderId = orderId
+                     })
+                     .subscribe( (orderId: string) => {
       this.router.navigate(['/order-sumary'])
       console.log(`Compra concluída: ${orderId}`)
       this.orderService.clear()
     });
     console.log(order);
+  }
+
+  isOrderCompleted(): boolean {
+    return this.orderId !== undefined;
   }
 }
