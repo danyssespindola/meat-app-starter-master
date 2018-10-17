@@ -5,6 +5,7 @@ import { CartItem } from '../restaurant-detail/shopping-cart/cart-item.model';
 import { Order, OrderItem } from './order.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { LoginService } from '../security/login/login.service';
 
 @Component({
   selector: 'mt-order',
@@ -40,7 +41,8 @@ export class OrderComponent implements OnInit {
 
   constructor(private orderService: OrderService,
               private router: Router,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private loginService: LoginService) {
    }
 
   ngOnInit() {
@@ -53,6 +55,12 @@ export class OrderComponent implements OnInit {
       optionalAddress: this.formBuilder.control(''),
       paymentOption: this.formBuilder.control('', [Validators.required])
     }, {validator: OrderComponent.equalsTo});
+
+    if(this.loginService.isLoogedIn) {
+      this.orderForm.controls['name'].setValue(this.loginService.user.name);
+      this.orderForm.controls['email'].setValue(this.loginService.user.email);
+      this.orderForm.controls['emailConfirmation'].setValue(this.loginService.user.email);
+    }
   }
 
   cartItems(): CartItem[] {
