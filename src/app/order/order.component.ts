@@ -88,9 +88,7 @@ export class OrderComponent implements OnInit {
   checkOrder(order: Order) {
     order.orderItems = this.cartItems().map((item: CartItem) => new OrderItem(item.quantity, item.menuItem.id));
     this.orderService.checkOrder(order)
-                     .do((orderId: string) => {
-                       this.orderId = orderId
-                     })
+                     .do((orderId: string) => {this.orderId = orderId})
                      .subscribe( (orderId: string) => {
       this.router.navigate(['/order-sumary'])
       console.log(`Compra concluída: ${orderId}`)
