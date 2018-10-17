@@ -23,7 +23,7 @@ export const ROUTES: Routes = [
     },
     {path: 'restaurants', component: RestaurantsComponent},
     {path: 'order', loadChildren: './order/order.module#OrderModule',
-     canLoad: [LogeedInGuard]},
+     canLoad: [LogeedInGuard], canActivate: [LogeedInGuard]},
     {path: 'order-sumary', component: OrderSumaryComponent},
     {path: '**', component: NotFoundComponent}
 ];
