@@ -6,7 +6,7 @@ import { Order, OrderItem } from './order.model';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { LoginService } from '../security/login/login.service';
-import 'rxjs/add/operator/do';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'mt-order',
@@ -87,8 +87,8 @@ export class OrderComponent implements OnInit {
 
   checkOrder(order: Order) {
     order.orderItems = this.cartItems().map((item: CartItem) => new OrderItem(item.quantity, item.menuItem.id));
-    this.orderService.checkOrder(order)
-                     .do((orderId: string) => {this.orderId = orderId})
+    this.orderService.checkOrder(order).pipe
+                     (tap((orderId: string) => {this.orderId = orderId}))
                      .subscribe( (orderId: string) => {
       this.router.navigate(['/order-sumary'])
       console.log(`Compra concluída: ${orderId}`)
