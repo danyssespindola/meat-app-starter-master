@@ -8,9 +8,9 @@ export class LeaveOrderGuard implements CanDeactivate<OrderComponent> {
     // tslint:disable-next-line:one-line
     {
         if (!component.isOrderCompleted()) {
-        return window.confirm('Deseja desistir da compra?');
+            return window.confirm('Deseja desistir da compra?');
         } else {
-        return true;
+            return true;
         }
     }
 }
