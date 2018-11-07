@@ -2,7 +2,8 @@ import { ShoppingCartService } from '../restaurant-detail/shopping-cart/shopping
 import { Injectable } from '@angular/core';
 import { CartItem } from '../restaurant-detail/shopping-cart/cart-item.model';
 import { Order } from './order.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import {map} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MEAT_API } from '../app.api';
 import { LoginService } from '../security/login/login.service';
@@ -49,6 +50,6 @@ export class OrderService {
 
         return this.http.post<Order>(`${MEAT_API}/orders`, order, {headers: headers})
             // tslint:disable-next-line:no-shadowed-variable
-            .map(order => order.id);
+            .pipe(map(order => order.id));
     }
 }

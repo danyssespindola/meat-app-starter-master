@@ -1,5 +1,3 @@
-import {Observable} from 'rxjs/Observable'
-import 'rxjs/add/observable/throw'
 import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { NotificationService } from './shared/messages/notification.service';
